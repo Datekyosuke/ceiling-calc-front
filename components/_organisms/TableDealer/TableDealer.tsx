@@ -10,15 +10,16 @@ import { Suspense } from 'react';
 type IProps = {
   rowCount: number;
   isLoading: boolean;
+  deleteDealer(dealerId: number): void;
 };
 
-const TableDealer = ({ rowCount, isLoading }: IProps) => {
+const TableDealer = ({ rowCount, isLoading, deleteDealer }: IProps) => {
   const [loadedRows, setLoadedRows] = useAtom(ATableDealerRows);
   const [sortDirection, setSortDirection] = useAtom(ATableDealerSortDirections);
   const skeletonRows = Array.from(Array(rowCount));
   const skeletonHeight = 16;
-  const skeletonMb = 3;
-  const skeletonMt = 3;
+  const skeletonMb = 10;
+  const skeletonMt = 10;
 
   const sortColumn = (column: ITableDealerHeadingSortable, columnType: 'text' | 'numeric') => {
     setSortDirection(setTableDealerSort(sortDirection, column));
@@ -55,6 +56,9 @@ const TableDealer = ({ rowCount, isLoading }: IProps) => {
             >
               Задолженность
             </TableHeading>
+            <TableHeading> Город </TableHeading>
+
+            <TableHeading> Действия </TableHeading>
           </tr>
         </thead>
         <tbody>
@@ -63,13 +67,19 @@ const TableDealer = ({ rowCount, isLoading }: IProps) => {
               {skeletonRows.map((skeletonRow, i) => (
                 <tr key={'skeleton-' + i}>
                   <td>
-                    <Skeleton height={skeletonHeight} mb={skeletonMb} mt={skeletonMt} width={350} />
-                  </td>
-                  <td>
                     <Skeleton height={skeletonHeight} mb={skeletonMb} mt={skeletonMt} width={200} />
                   </td>
                   <td>
-                    <Skeleton height={skeletonHeight} mb={skeletonMb} mt={skeletonMt} width={150} />
+                    <Skeleton height={skeletonHeight} mb={skeletonMb} mt={skeletonMt} width={100} />
+                  </td>
+                  <td>
+                    <Skeleton height={skeletonHeight} mb={skeletonMb} mt={skeletonMt} width={100} />
+                  </td>
+                  <td>
+                    <Skeleton height={skeletonHeight} mb={skeletonMb} mt={skeletonMt} width={130} />
+                  </td>
+                  <td>
+                    <Skeleton height={skeletonHeight} mb={skeletonMb} mt={skeletonMt} width={100} />
                   </td>
                 </tr>
               ))}
@@ -78,11 +88,14 @@ const TableDealer = ({ rowCount, isLoading }: IProps) => {
             <>
               {loadedRows.map((row) => (
                 <TableRow
+                  id={row.id}
                   debts={row.debts}
                   firstName={row.firstName}
                   lastName={row.lastName}
                   telephone={row.telephone}
                   key={row.firstName + row.lastName + row.telephone}
+                  deleteDealer={deleteDealer}
+                  city={row.city}
                 />
               ))}
             </>
